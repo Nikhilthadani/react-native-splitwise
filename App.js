@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import * as React from "react";
+import Navigator from "./scripts/navigation/Navigation";
+import { Dimensions, SafeAreaView, StatusBar } from "react-native";
+import { SQLiteProvider } from "expo-sqlite";
+import { executeSqlCreateTables } from "./scripts/sql/executer";
+import Fallback from "./scripts/screens/Fallback";
+import AuthProvider from "./scripts/context/AuthProvider";
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <React.Fragment>
+      <StatusBar />
+      <React.Suspense fallback={<Fallback />}>
+        <SQLiteProvider
+          databaseName="test.db"
+          onInit={executeSqlCreateTables}
+          useSuspense
+        >
+          <AuthProvider>
+            <SafeAreaView
+              style={{ flex: 1, height: Dimensions.get("window").height }}
+            >
+              <Navigator />
+            </SafeAreaView>
+          </AuthProvider>
+        </SQLiteProvider>
+      </React.Suspense>
+    </React.Fragment>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
