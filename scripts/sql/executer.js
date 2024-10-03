@@ -132,6 +132,20 @@ async function checkSession() {
     await db.closeAsync();
   }
 }
+async function deleteAllSession() {
+  let db;
+  try {
+    db = await SQLite.openDatabaseAsync("test.db");
+    const result = await db.getAllAsync("SELECT * FROM session");
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  } finally {
+    await db.closeAsync();
+  }
+}
 async function createSession(userId) {
   let db;
   try {
@@ -159,4 +173,5 @@ export {
   executeAnyQueryWithParams,
   checkSession,
   createSession,
+  deleteAllSession,
 };

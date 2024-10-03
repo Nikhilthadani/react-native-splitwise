@@ -4,7 +4,9 @@ import {
   getUserById,
   checkSession,
   createSession,
+  deleteAllSession,
 } from "../sql/executer";
+import { getAllGroupsOfUser } from "../sql/group";
 const AuthContext = createContext({
   login: (id) => {},
   signUp: async (name, email) => {},
@@ -20,12 +22,20 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function checkAuthState() {
       const session = await checkSession();
+      console.log("Session: ", session);
+
       if (!session || session.length == 0) {
+        return;
+      }
+
+      if (session.length > 1) {
+        await deleteAllSession();
         return;
       }
       const user = await getUserById(session[0].id);
       setUser(user);
       setIsLoggedIn(true);
+      getAllGroupsOfUser(user.id);
     }
     checkAuthState();
   }, []);

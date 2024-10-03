@@ -4,7 +4,7 @@ import { Button, IconButton, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthProvider";
-import { createNewGroup } from "../../sql/group";
+import { createGroup } from "../../sql/group";
 
 const CreateGroupScreen = () => {
   const { user } = useAuth();
@@ -14,7 +14,7 @@ const CreateGroupScreen = () => {
   const navigation = useNavigation();
   const SCREEN_OPTIONS = {
     headerRight: (props) => (
-      <Button mode="text" {...props} onPress={createGroup}>
+      <Button mode="text" {...props} onPress={createANewGroup}>
         Done
       </Button>
     ),
@@ -29,11 +29,10 @@ const CreateGroupScreen = () => {
     navigation.setOptions(SCREEN_OPTIONS);
   }, []);
 
-  const createGroup = async () => {
+  const createANewGroup = async () => {
     try {
-      const result = await createNewGroup(groupName, user.id);
+      const result = await createGroup(groupName, user.id);
       console.log("RESULT OF CREATE_GROUP_SCREEN", result);
-      alert(result.lastInsertRowId);
     } catch (error) {
       console.log(error);
     }
