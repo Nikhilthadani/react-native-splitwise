@@ -1,6 +1,6 @@
 import * as Sqlite from "expo-sqlite";
 
-export class Connection {
+export default class Connection {
   static #connection = null;
   static async getConnection() {
     if (!this.#connection) {

@@ -35,7 +35,6 @@ const AuthProvider = ({ children }) => {
       const user = await getUserById(session[0].id);
       setUser(user);
       setIsLoggedIn(true);
-      getAllGroupsOfUser(user.id);
     }
     checkAuthState();
   }, []);

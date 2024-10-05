@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/Feather";
 import { View } from "react-native";
 import CreateGroupScreen from "../../screens/group/CreateGroupScreen";
 import { useNavigation } from "@react-navigation/native";
+import GroupMembers from "../../screens/group/GroupMembers";
 const Stack = createNativeStackNavigator();
 const GroupStackNavigator = () => {
   const nav = useNavigation();
@@ -24,6 +25,10 @@ const GroupStackNavigator = () => {
       <Stack.Screen
         name={GroupComponents.AddGroup}
         component={CreateGroupScreen}
+      ></Stack.Screen>
+      <Stack.Screen
+        name={GroupComponents.GroupMembers}
+        component={GroupMembers}
       ></Stack.Screen>
     </Stack.Navigator>
   );

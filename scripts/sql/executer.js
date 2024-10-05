@@ -1,4 +1,3 @@
-import * as SQLite from "expo-sqlite";
 import {
   UsersTable,
   ExpenseSplitsTable,
@@ -8,11 +7,11 @@ import {
   PaymentsTable,
   SessionTable,
 } from "./tables";
-
+import Connection from "./login/AuthOperations";
 export const executeSqlCreateTables = async () => {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     await db.execAsync(UsersTable);
     await db.execAsync(GroupsTable);
     await db.execAsync(GroupMembersTable);
@@ -20,33 +19,42 @@ export const executeSqlCreateTables = async () => {
     await db.execAsync(ExpenseSplitsTable);
     await db.execAsync(PaymentsTable);
     await db.execAsync(SessionTable);
-
     console.log("Created all tables 🎉");
   } catch (error) {
     console.log("Error connecting to SQite");
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 };
+
+const deleteGroups = async () => {
+  let db;
+  try {
+    db = await Connection.getConnection();
+    await db.execAsync("DELETE FROM groups; DELETE from group_members;");
+
+    console.log("DELETE ALL GROUPS  🎉");
+  } catch (error) {
+    console.log("Error connecting to SQite");
+    throw error;
+  }
+};
+
 async function getAllTables() {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.getAllAsync(
       "SELECT name FROM sqlite_master WHERE type = 'table';"
     );
     console.log(JSON.stringify(result));
   } catch (error) {
     throw err;
-  } finally {
-    await db.closeAsync();
   }
 }
 async function getUserById(id) {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.getAllAsync(
       "SELECT name,email,id from users where id = ?;",
       [id]
@@ -56,14 +64,12 @@ async function getUserById(id) {
     return result[0];
   } catch (error) {
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
 async function getAllUsers() {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.getAllAsync("SELECT * FROM users");
     for (const row of result) {
       console.log(row.id, row.value, row.intValue);
@@ -74,16 +80,15 @@ async function getAllUsers() {
     console.log(error);
 
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
+
 async function createUser(name, email) {
   let db;
   try {
     console.log(name, email);
 
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.runAsync(
       "INSERT INTO users ( name , email) VALUES (?,?)",
       name,
@@ -91,12 +96,13 @@ async function createUser(name, email) {
     );
     console.log(result.lastInsertRowId);
 
-    return await getUserById(result.lastInsertRowId);
+    return await db.getAllAsync(
+      "SELECT name,email,id from users where id = ?;",
+      [result.lastInsertRowId]
+    );
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
 
@@ -105,7 +111,7 @@ const executeAnyQueryWithParams = async (query, ...params) => {
   try {
     console.log("Executing: ", query, "with params: ", params);
 
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.runAsync(query, ...params);
     console.log(result.lastInsertRowId);
 
@@ -113,55 +119,47 @@ const executeAnyQueryWithParams = async (query, ...params) => {
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 };
 
 async function checkSession() {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.getAllAsync("SELECT * FROM session");
     console.log(result);
     return result;
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
 async function deleteAllSession() {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.getAllAsync("SELECT * FROM session");
     console.log(result);
     return result;
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
 async function createSession(userId) {
   let db;
   try {
-    db = await SQLite.openDatabaseAsync("test.db");
+    db = await Connection.getConnection();
     const result = await db.runAsync(
       "INSERT INTO session (id, user_id) VALUES (?,?)",
       1,
       userId
     );
-    console.log("createsession >>>", result);
+    console.log(" >>>", result);
     return result[0];
   } catch (error) {
     console.log(error);
     throw error;
-  } finally {
-    await db.closeAsync();
   }
 }
 

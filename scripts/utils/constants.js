@@ -9,4 +9,5 @@ export const GroupComponents = {
   AllGroups: "AllGroups",
   GroupItem: "GroupItem",
   AddGroup: "AddGroup",
+  GroupMembers: "GroupMembers",
 };

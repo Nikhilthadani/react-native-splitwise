@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Button, IconButton, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -14,7 +14,11 @@ const CreateGroupScreen = () => {
   const navigation = useNavigation();
   const SCREEN_OPTIONS = {
     headerRight: (props) => (
-      <Button mode="text" {...props} onPress={createANewGroup}>
+      <Button
+        mode="text"
+        {...props}
+        onPress={async () => await createANewGroup()}
+      >
         Done
       </Button>
     ),
@@ -25,18 +29,23 @@ const CreateGroupScreen = () => {
     ),
     headerShadowVisible: false,
   };
-  useLayoutEffect(() => {
-    navigation.setOptions(SCREEN_OPTIONS);
-  }, []);
-
   const createANewGroup = async () => {
     try {
+      console.log(groupName);
+      if (!groupName) return;
+
       const result = await createGroup(groupName, user.id);
       console.log("RESULT OF CREATE_GROUP_SCREEN", result);
+      alert("Created new group!!!");
+      navigation.goBack();
     } catch (error) {
       console.log(error);
     }
   };
+  useLayoutEffect(() => {
+    navigation.setOptions(SCREEN_OPTIONS);
+  }, [navigation, SCREEN_OPTIONS, createANewGroup]);
+  console.log(groupName); // For debugging to see groupName changes
 
   return (
     <View style={styles.container}>
@@ -56,7 +65,7 @@ const CreateGroupScreen = () => {
         </View>
         <View style={{ width: 300 }}>
           <TextInput
-            onChangeText={(e) => setGroupName(e)}
+            onChangeText={setGroupName}
             mode="flat"
             value={groupName}
             placeholder="Group Name"
@@ -64,6 +73,7 @@ const CreateGroupScreen = () => {
           />
         </View>
       </View>
+      <Button onPress={createANewGroup}>OK</Button>
     </View>
   );
 };
