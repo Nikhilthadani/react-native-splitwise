@@ -2,13 +2,13 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { BottomTabScreens } from "../utils/constants";
-import FriendsScreen from "../screens/FriendsScreen";
 import ActivityScreen from "../screens/ActivityScreen";
 import AccountScreen from "../screens/AccountScreen";
 import Icon from "react-native-vector-icons/Feather";
 import GroupStackNavigator from "./group/stack-navigator";
 import { useAuth } from "../context/AuthProvider";
 import LoginStackNavigator from "./auth/stack-nav";
+import FriendsStackNavigator from "./friends/stack-navigator";
 const Tab = createMaterialBottomTabNavigator();
 
 export default function Navigator() {
@@ -35,7 +35,7 @@ export default function Navigator() {
             tabBarIcon: (props) => <Icon {...props} name={"user"} size={20} />,
           }}
           name={BottomTabScreens.Friends}
-          component={FriendsScreen}
+          component={FriendsStackNavigator}
         />
         <Tab.Screen
           options={{

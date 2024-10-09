@@ -7,19 +7,22 @@ import {
   deleteAllSession,
 } from "../sql/executer";
 import { getAllGroupsOfUser } from "../sql/group";
+import Connection from "../sql/login/AuthOperations";
 const AuthContext = createContext({
   login: (id) => {},
-  signUp: async (name, email) => {},
+  signUp: async (name, phone) => {},
   isLoggedIn: false,
   user: { name: "", email: "", id: 0 },
+  logout: async () => {},
 });
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ name: "", email: "", id: 0 });
+  const [user, setUser] = useState({ name: "", phone: "", id: 0 });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    Connection.getConnection();
     async function checkAuthState() {
       const session = await checkSession();
       console.log("Session: ", session);
@@ -30,10 +33,13 @@ const AuthProvider = ({ children }) => {
 
       if (session.length > 1) {
         await deleteAllSession();
-        return;
       }
-      const user = await getUserById(session[0].id);
-      setUser(user);
+
+      console.log("sessionid-> ", session[0].id);
+      const userDetails = await getUserById(session[0].id);
+      console.log(userDetails);
+
+      setUser(userDetails);
       setIsLoggedIn(true);
     }
     checkAuthState();
@@ -63,9 +69,18 @@ const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
+  const logout = async () => {
+    try {
+      await deleteAllSession();
+      setUser(null);
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, login, signUp }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, login, signUp, logout }}>
       {children}
     </AuthContext.Provider>
   );

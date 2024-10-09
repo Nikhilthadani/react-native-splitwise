@@ -11,3 +11,12 @@ export const GroupComponents = {
   AddGroup: "AddGroup",
   GroupMembers: "GroupMembers",
 };
+export const FriendsComponent = {
+  AllFriends: "AllFriends",
+  AddFriend: "AddFriend",
+  FriendPage: "FriendPage",
+};
+export const ExpensesComponent = {
+  AddExpenseGroup: "AddExpenseGroup",
+  AddExpensePeople: "AddExpensePeople",
+};

@@ -1,13 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GroupComponents } from "../../utils/constants";
+import { ExpensesComponent, GroupComponents } from "../../utils/constants";
 import AllGroups from "../../screens/group/AllGroups";
 import GroupItem from "../../screens/group/GroupItem";
-import { Button, IconButton } from "react-native-paper";
-import Icon from "react-native-vector-icons/Feather";
-import { View } from "react-native";
 import CreateGroupScreen from "../../screens/group/CreateGroupScreen";
 import { useNavigation } from "@react-navigation/native";
 import GroupMembers from "../../screens/group/GroupMembers";
+import AddExpenseGroup from "../../screens/expenses/AddExpenseGroup";
+import FloatingFab from "../../components/fab/FloatingFab";
 const Stack = createNativeStackNavigator();
 const GroupStackNavigator = () => {
   const nav = useNavigation();
@@ -29,6 +28,10 @@ const GroupStackNavigator = () => {
       <Stack.Screen
         name={GroupComponents.GroupMembers}
         component={GroupMembers}
+      ></Stack.Screen>
+      <Stack.Screen
+        name={ExpensesComponent.AddExpenseGroup}
+        component={AddExpenseGroup}
       ></Stack.Screen>
     </Stack.Navigator>
   );

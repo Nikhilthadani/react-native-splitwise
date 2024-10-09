@@ -1,19 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import * as Contacts from "expo-contacts";
+import SelectContacts from "../components/group/friends/SelectContacts";
 
-const FriendsScreen = () => {
+const SelectFriends = () => {
   const [contacts, setContacts] = useState();
-  useEffect(() => {
+  useLayoutEffect(() => {
     async function getPermissions() {
-      if (Contacts.PermissionStatus.GRANTED) {
-        alert("GRANTED");
-        const contacts = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
-        });
-        setContacts(contacts);
-        return;
-      }
       const { status, granted, canAskAgain } =
         await Contacts.requestPermissionsAsync();
       if (status !== "granted") {
@@ -34,18 +27,19 @@ const FriendsScreen = () => {
         });
         setContacts(contacts);
       }
+      alert("OK");
     }
     getPermissions();
   }, []);
-  console.log(contacts?.data?.[0]);
-
   return (
-    <View>
-      <Text>FriendsScreen</Text>
+    <View style={{ flex: 1 }}>
+      {/* <View>
+   {   contacts?.data?.length > 0 && <SelectContacts contacts={contacts.data} />}
+      </View> */}
     </View>
   );
 };
 
-export default FriendsScreen;
+export default SelectFriends;
 
 const styles = StyleSheet.create({});

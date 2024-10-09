@@ -6,6 +6,8 @@ import {
   GroupsTable,
   PaymentsTable,
   SessionTable,
+  ActivityTable,
+  FriendsTable,
 } from "./tables";
 import Connection from "./login/AuthOperations";
 export const executeSqlCreateTables = async () => {
@@ -19,6 +21,9 @@ export const executeSqlCreateTables = async () => {
     await db.execAsync(ExpenseSplitsTable);
     await db.execAsync(PaymentsTable);
     await db.execAsync(SessionTable);
+    await db.execAsync(ActivityTable);
+    await db.execAsync(FriendsTable);
+    await getAllTables();
     console.log("Created all tables 🎉");
   } catch (error) {
     console.log("Error connecting to SQite");
@@ -38,7 +43,19 @@ const deleteGroups = async () => {
     throw error;
   }
 };
+const getActivitiies = async () => {
+  try {
+    const db = await Connection.getConnection();
+    const activities = await db.getAllAsync("SELECT * FROM activity");
+    const friends = await db.getAllAsync("SELECT * FROM friends");
 
+    console.log("activities all >>", activities);
+    console.log("friends all >>", friends);
+  } catch (error) {
+    console.log("Error connecting to SQite", error);
+    throw error;
+  }
+};
 async function getAllTables() {
   let db;
   try {
@@ -52,16 +69,14 @@ async function getAllTables() {
   }
 }
 async function getUserById(id) {
-  let db;
   try {
-    db = await Connection.getConnection();
-    const result = await db.getAllAsync(
-      "SELECT name,email,id from users where id = ?;",
+    const db = await Connection.getConnection();
+    const result = await db.getFirstAsync(
+      "SELECT name,phone,id from users where id = ?;",
       [id]
     );
-    console.log("RESULT", result);
-
-    return result[0];
+    console.log("RESULT of getUserById", result);
+    return result;
   } catch (error) {
     throw error;
   }
@@ -83,21 +98,25 @@ async function getAllUsers() {
   }
 }
 
-async function createUser(name, email) {
+/**
+ * add registered = 0 if user added from different user
+ */
+async function createUser(name, email, registertd = 1) {
   let db;
   try {
     console.log(name, email);
 
     db = await Connection.getConnection();
     const result = await db.runAsync(
-      "INSERT INTO users ( name , email) VALUES (?,?)",
+      "INSERT INTO users ( name , phone, is_registered) VALUES (?,?,?)",
       name,
-      email
+      email,
+      registertd
     );
     console.log(result.lastInsertRowId);
 
-    return await db.getAllAsync(
-      "SELECT name,email,id from users where id = ?;",
+    return await db.getFirstAsync(
+      "SELECT name,phone,id from users where id = ?;",
       [result.lastInsertRowId]
     );
   } catch (error) {
@@ -138,7 +157,7 @@ async function deleteAllSession() {
   let db;
   try {
     db = await Connection.getConnection();
-    const result = await db.getAllAsync("SELECT * FROM session");
+    const result = await db.getAllAsync("DELETE FROM session");
     console.log(result);
     return result;
   } catch (error) {
@@ -162,8 +181,8 @@ async function createSession(userId) {
     throw error;
   }
 }
-
 export {
+  getActivitiies,
   getAllTables,
   getUserById,
   createUser,

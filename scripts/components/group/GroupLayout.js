@@ -1,8 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 import GroupAppBar from "./GroupAppBar";
+import { useNavigation } from "@react-navigation/native";
 
 const GroupLayout = ({ children }) => {
+  const nav = useNavigation();
   return (
     <View style={{ flex: 1 }}>
       <GroupAppBar />

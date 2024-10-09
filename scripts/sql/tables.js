@@ -1,9 +1,10 @@
 export const UsersTable = `CREATE TABLE IF NOT EXISTS users   (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  phone TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  email TEXT UNIQUE NULL,
+  phone TEXT NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  is_registered INTEGER DEFAULT 0
 );`;
 
 export const GroupsTable = `CREATE TABLE IF NOT EXISTS groups   (
@@ -56,5 +57,19 @@ export const SessionTable = `CREATE TABLE IF NOT EXISTS session  (
   id INTEGER,
   user_id INT,
   PRIMARY KEY (id, user_id)
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);`;
+export const FriendsTable = `CREATE TABLE IF NOT EXISTS friends  (
+  adder_id INTEGER NOT NULL,
+  added_id INTEGER NOT NULL,
+  PRIMARY KEY (adder_id, added_id),
+  FOREIGN KEY (adder_id) REFERENCES users(id),
+  FOREIGN KEY (added_id) REFERENCES users(id)
+);`;
+export const ActivityTable = `CREATE TABLE IF NOT EXISTS activity  (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  activity TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );`;

@@ -4,6 +4,8 @@ import GroupContent from "../../components/group";
 import { getAllGroupsOfUser } from "../../sql/group";
 import { useAuth } from "../../context/AuthProvider";
 import { View } from "react-native";
+import { ExpensesComponent } from "../../utils/constants";
+import FloatingFab from "../../components/fab/FloatingFab";
 
 const AllGroups = ({ navigation }) => {
   const auth = useAuth();
@@ -22,6 +24,7 @@ const AllGroups = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <GroupContent groups={groups} />
+      <FloatingFab screen={ExpensesComponent.AddExpenseGroup} />
     </View>
   );
 };
