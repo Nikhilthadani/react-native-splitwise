@@ -2,6 +2,8 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import FriendsLayout from "./FriendsLayout";
 import FriendsList from "./FriendsList";
+import FloatingFab from "../fab/FloatingFab";
+import { ExpensesComponent } from "../../utils/constants";
 
 const AllFriends = () => {
   return (
@@ -9,6 +11,10 @@ const AllFriends = () => {
       <FriendsLayout>
         <FriendsList />
       </FriendsLayout>
+      <FloatingFab
+        screen={ExpensesComponent.AddExpensePeople}
+        arrowIcon={"note"}
+      />
     </View>
   );
 };

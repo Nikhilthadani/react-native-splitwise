@@ -5,11 +5,13 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { getFriendsOfUser } from "../../sql/friend/get";
 import { useNavigation } from "@react-navigation/native";
 import { FriendsComponent } from "../../utils/constants";
+import SelectContacts from "./SelectContacts";
+import { Button } from "react-native-paper";
 
 const FriendsList = () => {
   const navigation = useNavigation();
@@ -18,7 +20,7 @@ const FriendsList = () => {
     user: { id },
   } = useAuth();
   const [friends, setFriends] = useState([]);
-  useLayoutEffect(() => {
+  useEffect(() => {
     getFriendsOfUser(id)
       .then((data) => setFriends(data))
       .catch((err) => console.log(err));
