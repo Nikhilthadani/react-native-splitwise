@@ -53,7 +53,7 @@ const addNewFriend = async (db, name, phone, currentUserId) => {
   }
 };
 
-const isUserAlreadyExists = async (db, phoneNumber) => {
+export const isUserAlreadyExists = async (db, phoneNumber) => {
   try {
     const query = `SELECT name, phone, id from users where phone = ?`;
     const user = await db.getAllAsync(query, [phoneNumber]);
@@ -88,6 +88,13 @@ export const getUpdatedPhoneNummber = (number) => {
     num = num + n;
   }
   return num;
+};
+
+export const getPhoneNumberOfContact = async (id) => {
+  const contact = await getContactById(id);
+  if (!contact) return;
+  const phoneUpdated = getUpdatedPhoneNummber(contact.phone.replace("+91", ""));
+  return phoneUpdated;
 };
 
 export const addFriend = async (id, currentUserId) => {

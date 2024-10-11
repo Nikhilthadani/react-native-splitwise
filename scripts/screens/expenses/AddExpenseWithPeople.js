@@ -1,21 +1,58 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import SelectExpenseSharing from "../../components/expenses/SelectExpenseSharing";
-import { Button, TextInput } from "react-native-paper";
+import { Button, Switch, TextInput } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
+import { addExpense } from "../../sql/expense/add-expense";
+import { useAuth } from "../../context/AuthProvider";
+const SPLIT_TYPE = { PERCENTAGE: "PERCENTAGE", EQUALLY: "EQUALLY" };
 const AddExpenseWithPeople = () => {
+  const [switchOn, setSwitchOn] = useState(false);
   const [amount, setAmount] = useState(0);
   const [expenseDescription, setExpenseDescription] = useState("");
+  const [exenseSharing, setExenseSharing] = useState();
+  const {
+    user: { id },
+  } = useAuth();
   const setExpenseDetails = (e) => {
     setExpenseDescription(e);
   };
   const setExpenseAmount = (e) => {
     setAmount(e);
   };
+  const onSelectingValue = (value) => {
+    if (value?.groupId) {
+      console.log("SELECTED GROUP-->>", value);
+    } else if (value.contacts) {
+      console.log("SELECTED CONTACTS-->>", value);
+    }
+  };
+
+  const adExpenseHandler = async () => {
+    console.log("Details: ", { exenseSharing, expenseDescription, amount });
+    try {
+      const sharePerUser = +amount / +exenseSharing.contacts;
+      const res = addExpense(
+        exenseSharing.contacts,
+        sharePerUser,
+        expenseDescription,
+        amount,
+        id,
+        null
+      );
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <SelectExpenseSharing />
+      <View style={{ flexDirection: "row" }}>
+        <Text>{`Split Bill ${switchOn ? "Percentage" : "Equally"}`}</Text>
+        <Switch value={switchOn} onValueChange={setSwitchOn} />
+      </View>
+      <SelectExpenseSharing onSelectValue={setExenseSharing} />
       <View style={{ width: 300, gap: 20 }}>
         <View style={styles.inputBox}>
           <Icon name="receipt" size={30} />
@@ -40,7 +77,7 @@ const AddExpenseWithPeople = () => {
             style={styles.inputStyle}
           />
         </View>
-        <Button onPress={() => {}}>Add Expense</Button>
+        <Button onPress={adExpenseHandler}>Add Expense</Button>
       </View>
     </View>
   );

@@ -1,14 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import { getAllGroupsOfUser } from "../../sql/group";
 import { useAuth } from "../../context/AuthProvider";
 import SelectContacts from "../friends/SelectContacts";
 import { Dropdown } from "react-native-element-dropdown";
-
+const VALUES = { contacts: "contacts", group: "group" };
 const SelectExpenseSharing = ({ onSelectValue }) => {
   const [selectedValue, setSelectedValue] = useState();
-  const [groupValue, setGroupValue] = useState();
   const {
     user: { id },
   } = useAuth();
@@ -27,7 +26,15 @@ const SelectExpenseSharing = ({ onSelectValue }) => {
     await getGroups();
     setView(0);
   };
-
+  const handleValueChange = (value, type) => {
+    if (type === VALUES.contacts) {
+      setSelectedValue(value);
+      onSelectValue({ contacts: value });
+    } else {
+      setSelectedValue(value);
+      onSelectValue({ groupId: value });
+    }
+  };
   // on click change to friends
   // on click again change to first group
   return (
@@ -51,12 +58,12 @@ const SelectExpenseSharing = ({ onSelectValue }) => {
             data={groups}
             maxHeight={300}
             style={{ width: 300 }}
-            onChange={(e) => setSelectedValue(e.group_id)}
+            onChange={(e) => handleValueChange(e.group_id, VALUES.group)}
           />
         )}
         {view == 1 && (
           <SelectContacts
-            onSelectContacts={(v) => setSelectedValue(JSON.stringify(v))}
+            onSelectContacts={(v) => handleValueChange(v, VALUES.contacts)}
             renderLeftIcon={() => <Button icon={"save"}></Button>}
           />
         )}

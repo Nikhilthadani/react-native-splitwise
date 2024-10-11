@@ -64,7 +64,6 @@ INNER JOIN group_members gm
 ON g.id = gm.group_id 
 WHERE gm.user_id = ?;`;
     console.log("FINDING GROUPS OF USER->", userId);
-
     const res = await db.getAllAsync(query, userId);
     console.log("RESULT of FINDING GROUPS", res);
 

@@ -28,7 +28,7 @@ export const ExpensesTable = `CREATE TABLE IF NOT EXISTS expenses  (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   description TEXT NOT NULL,
   amount REAL NOT NULL,
-  paid_by INTEGER NOT NULL,
+  paid__by INTEGER NOT NULL,
   group_id INTEGER,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (paid_by) REFERENCES users(id),
@@ -49,6 +49,8 @@ export const PaymentsTable = `CREATE TABLE IF NOT EXISTS payments  (
   payer_id INTEGER NOT NULL,
   payee_id INTEGER NOT NULL,
   amount REAL NOT NULL,
+  expense_id INTEGER NOT NULL,
+  status TEXT,
   payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (payer_id) REFERENCES users(id),
   FOREIGN KEY (payee_id) REFERENCES users(id)
