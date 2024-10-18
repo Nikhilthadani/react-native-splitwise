@@ -19,4 +19,5 @@ export const FriendsComponent = {
 export const ExpensesComponent = {
   AddExpenseGroup: "AddExpenseGroup",
   AddExpensePeople: "AddExpensePeople",
+  SettleExpense: "SettleExpense",
 };

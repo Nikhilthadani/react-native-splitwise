@@ -33,7 +33,9 @@ const FriendsList = () => {
           renderItem={(data) => (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate(FriendsComponent.FriendPage, { id })
+                navigation.navigate(FriendsComponent.FriendPage, {
+                  id: data.item.id,
+                })
               }
               style={{
                 paddingVertical: 20,

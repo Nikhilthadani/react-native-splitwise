@@ -31,3 +31,12 @@ export const getUserIdsForExpenseSplits = async (contactIds) => {
     return userIds;
   }
 };
+
+export const getExpenseSplits = async (expenseId) => {
+  const QUERY = `SELECT * from expense_splits es JOIN users u on u.id = es.user_id  WHERE expense_id = ? `;
+  const db = await Connection.getConnection();
+
+  const result = await db.getAllAsync(QUERY, expenseId);
+
+  return result;
+};

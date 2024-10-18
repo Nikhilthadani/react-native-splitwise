@@ -31,7 +31,9 @@ const AddExpenseWithPeople = () => {
   const adExpenseHandler = async () => {
     console.log("Details: ", { exenseSharing, expenseDescription, amount });
     try {
-      const sharePerUser = +amount / +exenseSharing.contacts;
+      const numOfPeople = exenseSharing.contacts.length + 1;
+      const sharePerUser = Number(+amount / +numOfPeople);
+      alert(sharePerUser);
       const res = addExpense(
         exenseSharing.contacts,
         sharePerUser,

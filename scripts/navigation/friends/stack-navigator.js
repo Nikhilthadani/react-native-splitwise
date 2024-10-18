@@ -12,6 +12,7 @@ import AllFriends from "../../components/friends";
 import SelectContacts from "../../components/friends/SelectContacts";
 import FriendPage from "../../screens/friend/FriendPage";
 import AddExpenseWithPeople from "../../screens/expenses/AddExpenseWithPeople";
+import SettleExpense from "../../screens/expenses/SettleExpense";
 const Stack = createNativeStackNavigator();
 const FriendsStackNavigator = () => {
   const nav = useNavigation();
@@ -33,6 +34,10 @@ const FriendsStackNavigator = () => {
       <Stack.Screen
         name={ExpensesComponent.AddExpensePeople}
         component={AddExpenseWithPeople}
+      ></Stack.Screen>
+      <Stack.Screen
+        name={ExpensesComponent.SettleExpense}
+        component={SettleExpense}
       ></Stack.Screen>
     </Stack.Navigator>
   );
